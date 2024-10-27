@@ -18,7 +18,7 @@ public class Main {
 
         double averageTime = 0;
         int length = pq.size();
-        System.out.print("Execution order:[");
+        System.out.print("\nTask 1 Output:\nExecution order:[");
         while(!pq.isEmpty())
         {
             averageTime += pq.min().getTime()*pq.size();
@@ -48,7 +48,7 @@ public class Main {
         int size = tasks.length;
         int priority = 1;
 
-        System.out.print("\nExecution order:[");
+        System.out.print("\nTask 2 Output:\nExecution order:[");
         while(n > 0)
         {
             for(int i = 0; i < length; i++)
@@ -88,7 +88,7 @@ public class Main {
         size = tasks.length;
         int timePassed = 0;
 
-        System.out.print("\nExecution order:[");
+        System.out.print("\nTask 3 Output:\nExecution order:[");
         while(n > 0)
         {
             for(int i = 0; i < length; i++)
