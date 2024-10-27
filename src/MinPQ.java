@@ -1,39 +1,30 @@
 import java.util.Comparator;
 
-public class Schedule<Key extends Comparable<Key>>
+public class MinPQ<Key extends Comparable<Key>>
 {
     private Key[] pq;
     private int n;
-    private int time;
-    private int id;
-    private Comparator<Key> comparator;
 
-    public Schedule()
+    public MinPQ(int capacity)
     {
-        pq = (Key[]) new Object[1];
+        pq = (Key[]) new Comparable[capacity + 1];
         n = 0;
     }
 
-    public void job(int idNum, int time)
-    {
-        id = idNum;
-        this.time = time;
-    }
+    public Key min()
+    {return pq[1];}
 
-    public int getTime()
-    {return time;}
+    public int size()
+    {return n;}
 
     public boolean isEmpty()
     {return n == 0;}
 
-    private boolean less(int i,int j)
-    {return pq[i].compareTo(pq[j]) < 0;}
+    private boolean greater(int i,int j)
+    {return pq[i].compareTo(pq[j]) > 0;}
 
     private void exch(int i,int j)
     {Key temp = pq[i]; pq[i] = pq[j]; pq[j] = temp;}
-
-    public int size()
-    {return n;}
 
     public void insert(Key x)
     {
@@ -44,7 +35,7 @@ public class Schedule<Key extends Comparable<Key>>
 
     private void resize(int capacity)
     {
-        Key[] temp = (Key[]) new Object[capacity];
+        Key[] temp = (Key[]) new Comparable[capacity];
         for(int i = 1; i <= n; i++)
         {temp[i] = pq[i];}
 
@@ -62,7 +53,7 @@ public class Schedule<Key extends Comparable<Key>>
 
     private void swim(int k)
     {
-        while(k > 1 && less(k/2, k))
+        while(k > 1 && greater(k/2, k))
         {
             exch(k, k/2);
             k = k/2;
@@ -73,10 +64,10 @@ public class Schedule<Key extends Comparable<Key>>
         while (2*k <= n)
         {
             int j = 2*k;
-            if(j < n && less(j,j + 1))
+            if(j < n && greater(j,j + 1))
             {j++;}
 
-            if(!less(k, j))
+            if(!greater(k, j))
             {break;}
 
             exch(k, j);
