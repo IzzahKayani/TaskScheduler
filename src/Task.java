@@ -1,4 +1,3 @@
-;
 public class Task implements Comparable<Task> {
     private int id;
     private int time;

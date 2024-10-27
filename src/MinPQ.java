@@ -1,5 +1,4 @@
 import java.util.Comparator;
-
 public class MinPQ<Key extends Comparable<Key>>
 {
     private Key[] pq;
