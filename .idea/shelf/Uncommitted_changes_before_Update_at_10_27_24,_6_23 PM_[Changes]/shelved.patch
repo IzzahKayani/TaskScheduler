@@ -1,0 +1,443 @@
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//TIP To <b>Run</b> code, press <shortcut actionId=\"Run\"/> or\n// click the <icon src=\"AllIcons.Actions.Execute\"/> icon in the gutter.\npublic class Main {\n    public static void main(String[] args) {\n        //TIP Press <shortcut actionId=\"ShowIntentionActions\"/> with your caret at the highlighted text\n        // to see how IntelliJ IDEA suggests fixing it.\n        System.out.printf(\"Hello and welcome!\");\n\n        for (int i = 1; i <= 5; i++) {\n            //TIP Press <shortcut actionId=\"Debug\"/> to start debugging your code. We have set one <icon src=\"AllIcons.Debugger.Db_set_breakpoint\"/> breakpoint\n            // for you, but you can always add more by pressing <shortcut actionId=\"ToggleLineBreakpoint\"/>.\n            System.out.println(\"i = \" + i);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ b/src/Main.java	(date 1730069656956)
+@@ -1,15 +1,113 @@
+-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.util.Scanner;
+ public class Main {
+-    public static void main(String[] args) {
+-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
+-        // to see how IntelliJ IDEA suggests fixing it.
+-        System.out.printf("Hello and welcome!");
++    public static void main(String[] args) throws FileNotFoundException
++    {
++        MinPQ<Task> pq = new MinPQ<>(1);
++
++        Scanner sc = new Scanner(new File("task1-input.txt"));
++        sc.useDelimiter("\n");
++        while(sc.hasNext())
++        {
++            String[] tokens = sc.next().split(" ");
++            Task task = new Task(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
++            pq.insert(task);
++        }
++        sc.close();
++
++        double averageTime = 0;
++        int length = pq.size();
++        System.out.print("Execution order:[");
++        while(!pq.isEmpty())
++        {
++            averageTime += pq.min().getTime()*pq.size();
++            System.out.print(pq.delMin().getId());
++            if(!pq.isEmpty())
++            {System.out.print(",");}
++        }
++        System.out.println("]");
++
++        System.out.println("Average completion time: " + averageTime / length);
++
++        Scanner sc2 = new Scanner(new File("task2-input.txt"));
++        sc2.useDelimiter("\n");
++        Task[] tasks = new Task[100];
++        int n = 0;
++        while(sc2.hasNext())
++        {
++            String[] tokens = sc2.next().split(" ");
++            Task task = new Task(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
++            tasks[n] = task;
++            n++;
++        }
++        sc2.close();
++
++        averageTime = 0;
++        length = tasks.length;
++        int size = tasks.length;
++        int priority = 1;
++
++        System.out.print("\nExecution order:[");
++        while(n > 0)
++        {
++            for(int i = 0; i < length; i++)
++            {
++                if(tasks[i].getPriority() == priority)
++                {pq.insert(tasks[i]); n--;}
++            }
++            while(!pq.isEmpty())
++            {
++                averageTime += pq.min().getTime() * size;
++                System.out.print(pq.delMin().getId());
++                if (n != 0 || !pq.isEmpty())
++                {System.out.print(",");}
++                size--;
++            }
++            priority++;
++        }
++        System.out.println("]");
++        System.out.println("Average completion time: " + averageTime / length);
+ 
+-        for (int i = 1; i <= 5; i++) {
+-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
+-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
+-            System.out.println("i = " + i);
++        Scanner sc3 = new Scanner(new File("task3-input.txt"));
++        sc3.useDelimiter("\n");
++        n = 0;
++
++        tasks = new Task[100];
++        while(sc3.hasNext())
++        {
++            String[] tokens = sc3.next().split(" ");
++            Task task = new Task(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]),1,Integer.parseInt(tokens[2]));
++            tasks[n] = task;
++            n++;
+         }
++        sc3.close();
++
++        averageTime = 0;
++        length = tasks.length;
++        size = tasks.length;
++        int timePassed = 0;
++
++        System.out.print("\nExecution order:[");
++        while(n > 0)
++        {
++            for(int i = 0; i < length; i++)
++            {
++                if(tasks[i].getArrival() <= timePassed && tasks[i].getArrival()>= 0)
++                {
++                    pq.insert(tasks[i]);
++                    tasks[i].setArrival(-1);
++                }
++            }
++                averageTime += pq.min().getTime() * size;
++                timePassed += pq.min().getTime();
++                System.out.print(pq.delMin().getId());
++                size--;
++                n--;
++                if (n != 0 || !pq.isEmpty())
++                {System.out.print(",");}
++        }
++        System.out.println("]");
++        System.out.println("Average completion time: " + averageTime / length);
+     }
+ }
+\ No newline at end of file
+Index: src/Task.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package PACKAGE_NAME;\n\npublic class Task {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Task.java b/src/Task.java
+--- a/src/Task.java	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ b/src/Task.java	(date 1730068076756)
+@@ -1,4 +1,55 @@
+-package PACKAGE_NAME;
++;
++public class Task implements Comparable<Task> {
++    private int id;
++    private int time;
++    private int priority;
++    private int arrival;
++    public Task(int jobId, int processTime)
++    {
++        id = jobId;
++        time = processTime;
++    }
++
++    public Task(int jobId, int processTime, int priorityLevel)
++    {
++        id = jobId;
++        time = processTime;
++        priority = priorityLevel;
++    }
++
++    public Task(int jobId, int processTime, int priorityLevel, int arrivalTime)
++    {
++        id = jobId;
++        time = processTime;
++        priority = priorityLevel;
++        arrival = arrivalTime;
++    }
++
++    public int getId()
++        {return id;}
++
++    public int getTime()
++        {return time;}
++
++    public int getPriority()
++        {return priority;}
++
++    public int getArrival()
++        {return arrival;}
++
++    public void setArrival(int arrivalTime)
++    {
++        arrival = arrivalTime;
++    }
++    public int compareTo(Task o)
++    {
++        int result = 0;
+ 
+-public class Task {
++        if(this.time < o.time)
++        {result = -1;}
++        else if(this.time > o.time)
++        {result = 1;}
++
++        return result;
++    }
+ }
+Index: src/MinPQ.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.Comparator;\n\npublic class Schedule<Key extends Comparable<Key>>\n{\n    private Key[] pq;\n    private int n;\n    private int time;\n    private int id;\n    private Comparator<Key> comparator;\n\n    public Schedule()\n    {\n        pq = (Key[]) new Object[1];\n        n = 0;\n    }\n\n    public void job(int idNum, int time)\n    {\n        id = idNum;\n        this.time = time;\n    }\n\n    public int getTime()\n    {return time;}\n\n    public boolean isEmpty()\n    {return n == 0;}\n\n    private boolean less(int i,int j)\n    {return pq[i].compareTo(pq[j]) < 0;}\n\n    private void exch(int i,int j)\n    {Key temp = pq[i]; pq[i] = pq[j]; pq[j] = temp;}\n\n    public int size()\n    {return n;}\n\n    public void insert(Key x)\n    {\n        if (n == pq.length - 1) resize(2 * pq.length);\n        pq[++n] = x;\n        swim(n);\n    }\n\n    private void resize(int capacity)\n    {\n        Key[] temp = (Key[]) new Object[capacity];\n        for(int i = 1; i <= n; i++)\n        {temp[i] = pq[i];}\n\n        pq = temp;\n    }\n\n    public Key delMin()\n    {\n        Key min = pq[1];\n        exch(1, n--);\n        sink(1);\n        pq[n+1] = null;\n        return min;\n    }\n\n    private void swim(int k)\n    {\n        while(k > 1 && less(k/2, k))\n        {\n            exch(k, k/2);\n            k = k/2;\n        }\n    }\n    private void sink(int k)\n    {\n        while (2*k <= n)\n        {\n            int j = 2*k;\n            if(j < n && less(j,j + 1))\n            {j++;}\n\n            if(!less(k, j))\n            {break;}\n\n            exch(k, j);\n            k = j;\n\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/MinPQ.java b/src/MinPQ.java
+--- a/src/MinPQ.java	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ b/src/MinPQ.java	(date 1730008479757)
+@@ -1,40 +1,31 @@
+ import java.util.Comparator;
+ 
+-public class Schedule<Key extends Comparable<Key>>
++public class MinPQ<Key extends Comparable<Key>>
+ {
+     private Key[] pq;
+     private int n;
+-    private int time;
+-    private int id;
+-    private Comparator<Key> comparator;
+ 
+-    public Schedule()
++    public MinPQ(int capacity)
+     {
+-        pq = (Key[]) new Object[1];
++        pq = (Key[]) new Comparable[capacity + 1];
+         n = 0;
+     }
+ 
+-    public void job(int idNum, int time)
+-    {
+-        id = idNum;
+-        this.time = time;
+-    }
++    public Key min()
++    {return pq[1];}
+ 
+-    public int getTime()
+-    {return time;}
++    public int size()
++    {return n;}
+ 
+     public boolean isEmpty()
+     {return n == 0;}
+ 
+-    private boolean less(int i,int j)
+-    {return pq[i].compareTo(pq[j]) < 0;}
++    private boolean greater(int i,int j)
++    {return pq[i].compareTo(pq[j]) > 0;}
+ 
+     private void exch(int i,int j)
+     {Key temp = pq[i]; pq[i] = pq[j]; pq[j] = temp;}
+ 
+-    public int size()
+-    {return n;}
+-
+     public void insert(Key x)
+     {
+         if (n == pq.length - 1) resize(2 * pq.length);
+@@ -44,7 +35,7 @@
+ 
+     private void resize(int capacity)
+     {
+-        Key[] temp = (Key[]) new Object[capacity];
++        Key[] temp = (Key[]) new Comparable[capacity];
+         for(int i = 1; i <= n; i++)
+         {temp[i] = pq[i];}
+ 
+@@ -62,7 +53,7 @@
+ 
+     private void swim(int k)
+     {
+-        while(k > 1 && less(k/2, k))
++        while(k > 1 && greater(k/2, k))
+         {
+             exch(k, k/2);
+             k = k/2;
+@@ -73,10 +64,10 @@
+         while (2*k <= n)
+         {
+             int j = 2*k;
+-            if(j < n && less(j,j + 1))
++            if(j < n && greater(j,j + 1))
+             {j++;}
+ 
+-            if(!less(k, j))
++            if(!greater(k, j))
+             {break;}
+ 
+             exch(k, j);
+Index: src/JobOne.java
+===================================================================
+diff --git a/src/JobOne.java b/src/JobOne.java
+deleted file mode 100644
+--- a/src/JobOne.java	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ /dev/null	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
+@@ -1,4 +0,0 @@
+-package PACKAGE_NAME;
+-
+-public class JobOne {
+-}
+Index: TaskScheduler.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<module type=\"JAVA_MODULE\" version=\"4\">\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\n    <exclude-output />\n    <content url=\"file://$MODULE_DIR$\">\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\n    </content>\n    <orderEntry type=\"inheritedJdk\" />\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\n  </component>\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/TaskScheduler.iml b/TaskScheduler.iml
+--- a/TaskScheduler.iml	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ b/TaskScheduler.iml	(date 1729722155981)
+@@ -7,5 +7,6 @@
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" exported="" name="stdlib" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"1b727ede-03ca-4a19-a582-76e435aac9e6\" name=\"Changes\" comment=\"\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectColorInfo\"><![CDATA[{\n  \"associatedIndex\": 4\n}]]></component>\n  <component name=\"ProjectId\" id=\"2nXMkoDXrWbBXm3GDL1HX15GwNv\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"git-widget-placeholder\": \"master\",\n    \"kotlin-language-version-configured\": \"true\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"onboarding.tips.debug.path\": \"/Users/izzah/Downloads/CS 2341/TaskScheduler/src/Main.java\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419\" />\n        <option value=\"bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"1b727ede-03ca-4a19-a582-76e435aac9e6\" name=\"Changes\" comment=\"\" />\n      <created>1729115112368</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1729115112368</updated>\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/Main.java</url>\n          <line>11</line>\n          <option name=\"timeStamp\" value=\"1\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision d3234e7b296fabc6e3ecc20477d52843c5e8f681)
++++ b/.idea/workspace.xml	(date 1730071229722)
+@@ -1,34 +1,67 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="1b727ede-03ca-4a19-a582-76e435aac9e6" name="Changes" comment="" />
++    <list default="true" id="1b727ede-03ca-4a19-a582-76e435aac9e6" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/TaskScheduler.iml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskScheduler.iml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/MinPQ.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MinPQ.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Task.java" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Class" />
++      </list>
++    </option>
++  </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="ProjectColorInfo"><![CDATA[{
+-  "associatedIndex": 4
++  <component name="GithubPullRequestsUISettings"><![CDATA[{
++  "selectedUrlAndAccountId": {
++    "url": "https://github.com/IzzahKayani/TaskScheduler.git",
++    "accountId": "88051b7a-f3b6-4455-ba0b-9551a27887ed"
++  }
+ }]]></component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
++  </component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 4
++}</component>
+   <component name="ProjectId" id="2nXMkoDXrWbBXm3GDL1HX15GwNv" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "master",
+-    "kotlin-language-version-configured": "true",
+-    "nodejs_package_manager_path": "npm",
+-    "onboarding.tips.debug.path": "/Users/izzah/Downloads/CS 2341/TaskScheduler/src/Main.java",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/izzah/Downloads/CS 2341/TaskScheduler/src/Main.java&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+@@ -45,21 +78,15 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1729115112368</updated>
++      <workItem from="1729115113380" duration="4228000" />
++      <workItem from="1729123131234" duration="156000" />
++      <workItem from="1729718059903" duration="4659000" />
++      <workItem from="1729957258358" duration="13631000" />
++      <workItem from="1730053071430" duration="10791000" />
+     </task>
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
+-  <component name="XDebuggerManager">
+-    <breakpoint-manager>
+-      <breakpoints>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/Main.java</url>
+-          <line>11</line>
+-          <option name="timeStamp" value="1" />
+-        </line-breakpoint>
+-      </breakpoints>
+-    </breakpoint-manager>
+-  </component>
+ </project>
+\ No newline at end of file
+diff --git a/src/example.txt b/src/example.txt
+deleted file mode 100644
